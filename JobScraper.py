@@ -1,17 +1,17 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-# job = input("Job:")
-# loc = input("Location:")
-#
-# indejob = job.replace(" ", "+")
-# indeloc = loc.replace(" ", "+")
-# indeloc = indeloc.replace(",", "%2C")
+job = input("Job:")
+loc = input("Location:")
+
+indejob = job.replace(" ", "+")
+indeloc = loc.replace(" ", "+")
+indeloc = indeloc.replace(",", "%2C")
 # http://www.indeed.com/jobs?q=software&l=san+jose+%2Cca
-# indeUrl = "http://www.indeed.com/jobs?q=%s&l=%s" % (indejob, indeloc)
-indejob = "software"
-indeloc = "arizona"
-indeUrl = "http://www.indeed.com/q-%s-l-%s-jobs.html" % (indejob, indeloc)
+indeUrl = "http://www.indeed.com/jobs?q=%s&l=%s" % (indejob, indeloc)
+# indejob = "software"
+# indeloc = "arizona"
+# indeUrl = "http://www.indeed.com/q-%s-l-%s-jobs.html" % (indejob, indeloc)
 print(indeUrl)
 
 inde = urlopen(indeUrl)
