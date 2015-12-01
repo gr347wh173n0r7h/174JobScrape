@@ -1,12 +1,12 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-job = input("Job:")
-loc = input("Location:")
+# job = input("Job:")
+# loc = input("Location:")
 
 # QUICK TEST CODE
-# job = "Software Engineering"
-# loc = "San Jose, Ca"
+job = "Software Engineering"
+loc = "San Jose, Ca"
 
 indejob = job.replace(" ", "+")
 indeloc = loc.replace(" ", "+")
