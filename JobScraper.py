@@ -102,8 +102,8 @@ for i in range (0,15):
 
 print("Dice")
 for i in range (0,15):
-    print(indeTitles[i])
-    print(indeCompanies[i])
-    print(indeLocs[i])
-    print(indeDesc[i] +"\n")
+    print(diceTitles[i])
+    print(diceCompanies[i])
+    print(diceLocs[i])
+    print(diceDesc[i] +"\n")
 
