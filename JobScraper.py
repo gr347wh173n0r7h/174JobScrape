@@ -67,10 +67,13 @@ diceLocs = []
 diceDesc = []
 for job in diceJobs:
     diceTitles.append(job.find("a", {"class": "dice-btn-link"}).get("title"))
-    diceCompanies.append(job.find("li", {"class", "employer"}).get_text())
-    diceLocs.append(job.find("li", {"class": "location"}).get_text())
+    diceCompanies.append(job.find("li", {"class": "employer"}).get_text())
+    # diceLocs.append(job.find("li", {"class": "location"}).get_text())
     diceDesc.append(job.find("div", {"class": "shortdesc"}).string)
 
+object = diceSoup.find_all("li", {"class": "location"})
+for location in object:
+    diceLocs.append(location.get_text())
 
 for i in range(0, 30):
     diceTitles[i] = diceTitles[i].replace("\n", "")
@@ -90,3 +93,17 @@ for i in range(0, 30):
 # diceCompanies[i]
 # diceLocs[i]
 # diceDesc[i]
+print("Indeed")
+for i in range (0,15):
+    print(indeTitles[i])
+    print(indeCompanies[i])
+    print(indeLocs[i])
+    print(indeDesc[i] +"\n")
+
+print("Dice")
+for i in range (0,15):
+    print(indeTitles[i])
+    print(indeCompanies[i])
+    print(indeLocs[i])
+    print(indeDesc[i] +"\n")
+
