@@ -1,12 +1,14 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import json
+import urllib.request
 
 # job = input("Job:")
 # loc = input("Location:")
 
 # QUICK TEST CODE
 job = "Software Engineering"
-loc = "San Jose, Ca"
+loc = "San Jose, CA"
 
 indejob = job.replace(" ", "+")
 indeloc = loc.replace(" ", "+")
@@ -18,6 +20,32 @@ diceloc = diceloc.replace(",", "%2C")
 
 indeUrl = "http://www.indeed.com/jobs?q=%s&l=%s" % (indejob, indeloc)
 diceURL = "https://www.dice.com/jobs?q=%s&l=%s" % (dicejob, diceloc)
+
+geocodeAddr = loc.replace(" ", "+")
+geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
+geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
+print(geocodeUrl)
+
+response = urllib.request.urlopen(geocodeUrl) #gets http response object
+string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+json_obj = json.loads(string)
+geocodeCoord = json_obj['results'][0]['geometry']['location']
+geocodeLat = geocodeCoord['lat']
+geocodeLon = geocodeCoord['lng']
+print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
+
+walkScoreAddress = loc.replace(" ", "%20")
+walkScoreAddress = walkScoreAddress.replace(",", "")
+walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
+walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
+response = urllib.request.urlopen(walkScoreUrl)
+string = response.read().decode('utf-8')
+json_obj = json.loads(string)
+walkScore = json_obj['walkscore']
+print("Walk Score: %s" % walkScore)
+# print(json.dumps(json_obj, indent=4, sort_keys=True))
+
+# print(walkScoreUrl)
 
 print(indeUrl)
 print(diceURL)
@@ -50,6 +78,7 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
     indeLocs = []
     for m in Loc:
         indeLocs.append(m.get_text())
+        print(m.get_text())
 
     indeDesc = []
     for m in Desc:
@@ -101,19 +130,20 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
     # diceCompanies[i]
     # diceLocs[i]
     # diceDesc[i]
-    print("Indeed")
-    for i in range(0, 15):
-        print(indeTitles[i])
-        print(indeCompanies[i])
-        print(indeLocs[i])
-        print(indeDesc[i] + "\n")
 
-    print("Dice")
-    for i in range(0, 15):
-        print(diceTitles[i])
-        print(diceCompanies[i])
-        print(diceLocs[i])
-        print(diceDesc[i] + "\n")
+    # print("Indeed")
+    # for i in range(0, 15):
+    #     print(indeTitles[i])
+    #     print(indeCompanies[i])
+    #     print(indeLocs[i])
+    #     print(indeDesc[i] + "\n")
+
+    # print("Dice")
+    # for i in range(0, 15):
+    #     print(diceTitles[i])
+    #     print(diceCompanies[i])
+    #     print(diceLocs[i])
+    #     print(diceDesc[i] + "\n")
 
     beginning = """
 <!DOCTYPE HTML>
