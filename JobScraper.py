@@ -115,5 +115,98 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
         print(diceLocs[i])
         print(diceDesc[i] + "\n")
 
+    beginning = """
+<!DOCTYPE HTML>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Job Scraper</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body class="landing">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header" class="alt">
+					<h1><a href="index.html">Job Scraper</a> by Group 1</h1>
+				</header>
+
+			<!-- Banner -->
+				<section id="banner">
+					<h2>Job Scraper</h2>
+					<p>Search Indeed.com and Dice.com at the same time!</p>
+				</section>
+
+			<!-- Main -->
+				<section id="main" class="container">
+
+					<section class="box special">
+						<header class="major">
+							<h2>Search Results</h2>
+							<br>
+							<table border="1">
+    """
+    fo = open("index.html", "w")
+    fo.write(beginning)
+    for i in range(0, 15):
+        fo.write("<tr>\n")
+        fo.write("<td>%s</td>\n" % indeTitles[i])
+        fo.write("<td>%s</td>\n" % indeCompanies[i])
+        fo.write("<td>%s</td>\n" % indeLocs[i])
+        fo.write("<td>%s</td>\n" % indeDesc[i])
+        fo.write("</tr>\n")
+
+    for i in range(0, 15):
+        fo.write("<tr>\n")
+        fo.write("<td>%s</td>\n" % diceTitles[i])
+        fo.write("<td>%s</td>\n" % diceCompanies[i])
+        fo.write("<td>%s</td>\n" % diceLocs[i])
+        fo.write("<td>%s</td>\n" % diceDesc[i])
+        fo.write("</tr>\n")
+    end = """
+    </table>
+						</header>
+						<!--<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>-->
+					</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+						<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollgress.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
+    """
+    fo.write(end)
+    fo.close()
 else:
     print("Bad search query. Please check your spelling")
