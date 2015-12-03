@@ -2,6 +2,9 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import json
 import urllib.request
+import Walkscore
+import os.path
+import webbrowser
 
 # job = input("Job:")
 # loc = input("Location:")
@@ -21,32 +24,6 @@ diceloc = diceloc.replace(",", "%2C")
 indeUrl = "http://www.indeed.com/jobs?q=%s&l=%s" % (indejob, indeloc)
 diceURL = "https://www.dice.com/jobs?q=%s&l=%s" % (dicejob, diceloc)
 
-geocodeAddr = loc.replace(" ", "+")
-geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
-geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
-print(geocodeUrl)
-
-response = urllib.request.urlopen(geocodeUrl) #gets http response object
-string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
-json_obj = json.loads(string)
-geocodeCoord = json_obj['results'][0]['geometry']['location']
-geocodeLat = geocodeCoord['lat']
-geocodeLon = geocodeCoord['lng']
-print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
-
-walkScoreAddress = loc.replace(" ", "%20")
-walkScoreAddress = walkScoreAddress.replace(",", "")
-walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
-walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
-response = urllib.request.urlopen(walkScoreUrl)
-string = response.read().decode('utf-8')
-json_obj = json.loads(string)
-walkScore = json_obj['walkscore']
-print("Walk Score: %s" % walkScore)
-# print(json.dumps(json_obj, indent=4, sort_keys=True))
-
-# print(walkScoreUrl)
-
 print(indeUrl)
 print(diceURL)
 
@@ -55,6 +32,33 @@ indeSoup = BeautifulSoup(inde, "html.parser")
 
 dice = urlopen(diceURL)
 diceSoup = BeautifulSoup(dice, "html.parser")
+
+def getWalkScore(location):
+    geocodeAddr = location.replace(" ", "+")
+    geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
+    geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
+    print(geocodeUrl)
+
+    response = urllib.request.urlopen(geocodeUrl) #gets http response object
+    string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+    json_obj = json.loads(string)
+    geocodeCoord = json_obj['results'][0]['geometry']['location']
+    geocodeLat = geocodeCoord['lat']
+    geocodeLon = geocodeCoord['lng']
+    print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
+
+    walkScoreAddress = location.replace(" ", "%20")
+    walkScoreAddress = walkScoreAddress.replace(",", "")
+    walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
+    walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
+    response = urllib.request.urlopen(walkScoreUrl)
+    string = response.read().decode('utf-8')
+    json_obj = json.loads(string)
+    walkScore = json_obj['walkscore']
+    print("Walk Score: %s" % walkScore)
+    # print(json.dumps(json_obj, indent=4, sort_keys=True))
+    print(walkScoreUrl)
+    return walkScore
 
 # INDEED -----------------------------------------------------------------
 badQuery = indeSoup.find_all("div", {"class": "bad_query"})
@@ -84,12 +88,20 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
     for m in Desc:
         indeDesc.append(m.get_text())
 
+    indeWalk = []
+    for m in indeLocs:
+        if m not in Walkscore.dic:
+            Walkscore.dic[m] = getWalkScore(m)
+        indeWalk.append(Walkscore.dic[m])
+
+
     for i in range(0, len(indeTitles)):
         if indeCompanies[i] is not None:
             indeCompanies[i] = indeCompanies[i].replace(" ", "")
             indeCompanies[i] = indeCompanies[i].replace("\n", "")
         if indeDesc[i] is not None:
             indeDesc[i] = indeDesc[i].replace("\n", "")
+
 
     # DICE -------------------------------------------------------------------
 
@@ -118,6 +130,11 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
         diceLocs[i] = diceLocs[i].replace("\n", "")
         diceDesc[i] = diceDesc[i].replace("\n", "").lstrip()
 
+    diceWalk = []
+    for m in diceLocs:
+        if m not in Walkscore.dic:
+            Walkscore.dic[m] = getWalkScore(m)
+        diceWalk.append(Walkscore.dic[m])
 
     # INDEED
     # indeTitles[i]
@@ -166,7 +183,7 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
 
 			<!-- Header -->
 				<header id="header" class="alt">
-					<h1><a href="index.html">Job Scraper</a> by Group 1</h1>
+					<h1><a href="index.html">Job Scraper</a> by Group 2</h1>
 				</header>
 
 			<!-- Banner -->
@@ -191,6 +208,7 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
         fo.write("<td>%s</td>\n" % indeTitles[i])
         fo.write("<td>%s</td>\n" % indeCompanies[i])
         fo.write("<td>%s</td>\n" % indeLocs[i])
+        fo.write("<td class='walkscore'><img src='images/api-logo.png'/> %s</td>\n" % indeWalk[i])
         fo.write("<td>%s</td>\n" % indeDesc[i])
         fo.write("</tr>\n")
 
@@ -199,6 +217,7 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
         fo.write("<td>%s</td>\n" % diceTitles[i])
         fo.write("<td>%s</td>\n" % diceCompanies[i])
         fo.write("<td>%s</td>\n" % diceLocs[i])
+        fo.write("<td class='walkscore'><img src='images/api-logo.png'/> %s</td>\n" % diceWalk[i])
         fo.write("<td>%s</td>\n" % diceDesc[i])
         fo.write("</tr>\n")
     end = """
@@ -236,7 +255,12 @@ if len(badQuery) == 0 and len(invalidLocation) == 0:
 	</body>
 </html>
     """
+
     fo.write(end)
     fo.close()
 else:
     print("Bad search query. Please check your spelling")
+
+path = os.path.abspath('index.html')
+URL = 'file://' + path
+webbrowser.open(URL)
