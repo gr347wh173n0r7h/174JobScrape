@@ -11,12 +11,12 @@ import webbrowser
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
+    self.response.out.write(template.render('views/index.html', {}))
+  def post(self):
     job = cgi.escape(self.request.get("job"))
     location = cgi.escape(self.request.get("location"))
-
-    # TEST DATA
-    job = "Software Engineer"
-    location = "San Jose, CA"
+    print job
+    print location
 
     indeed_job = job.replace(" ", "+")
     indeed_loc = location.replace(" ", "+")

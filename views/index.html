@@ -15,7 +15,6 @@
   </head>
   <body class="landing">
     <div id="page-wrapper">
-
       <!-- Header -->
         <header id="header" class="alt">
           <h1><a href="index.html">Job Scraper</a> by Group 1</h1>
@@ -25,58 +24,66 @@
         <section id="banner">
           <h2>Job Scraper</h2>
           <p>Search Indeed.com and Dice.com at the same time!</p>
-
+          <form action="/" method="POST" enctype="multipart/form-data">
+            <ul class="actions">
+              <li>
+                <label for="job" style="color:white;">What</label>
+                <input type="text" name="job" id="job" value="" placeholder="Software Engineer" style="color:grey;">
+              </li>
+              <li>
+                <label for="location" style="color:white;">Where</label>
+                <input type="text" name="location" id="location" value="" placeholder="San Jose, CA" style="color:grey;">
+              </li>
+            </ul>
+            <input type="submit" value="Search" class="default">
+          </form>
         </section>
 
       <!-- Main -->
+      {% if i_jobs and d_jobs %}
         <section id="main" class="container">
-
           <section class="box special">
             <header class="major">
               <h2>Search Results</h2>
               <br>
               <table border="1">
-<tr>
-  <td>
-    <h3>INDEED JOBS</h3>
-  </td>
-</tr>
-{% for i in i_jobs %}
-<tr>
-<td>{{i.title}}</td>
-<td>{{i.company}}</td>
-<td>{{i.location}}</td>
-<td>{{i.description}}</td>
-</tr>
-{% empty %}
-<tr>
-  <td> No jobs found </td>
-</tr>
-{% endfor %}
-<tr>
-  <td>
-    <h2>DICE JOBS</h2>
-  </td>
-</tr>
-{% for d in d_jobs %}
-<tr>
-<td>{{d.title}}</td>
-<td>{{d.company}}</td>
-<td>{{d.location}}</td>
-<td>{{d.description}}</td>
-</tr>
-{% empty %}
-<tr>
-  <td> No jobs found </td>
-</tr>
-{% endfor %}
-
-
-
-    </table>
+                <tr>
+                  <td><h3>INDEED JOBS</h3></td>
+                </tr>
+                {% for i in i_jobs %}
+                <tr>
+                  <td>{{i.title}}</td>
+                  <td>{{i.company}}</td>
+                  <td>{{i.location}}</td>
+                  <td>{{i.description}}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td> No jobs found </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td>
+                    <h2>DICE JOBS</h2>
+                  </td>
+                </tr>
+                {% for d in d_jobs %}
+                <tr>
+                <td>{{d.title}}</td>
+                <td>{{d.company}}</td>
+                <td>{{d.location}}</td>
+                <td>{{d.description}}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td> No jobs found </td>
+                </tr>
+                {% endfor %}
+              </table>
             </header>
             <!--<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>-->
           </section>
+          {% endif %}
 
       <!-- Footer -->
         <footer id="footer">
