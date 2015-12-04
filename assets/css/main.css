@@ -18,6 +18,11 @@
 		vertical-align: baseline;
 	}
 
+	table td.walkscore{
+		color: #207ab3;
+		font-weight: bold;
+	}
+	
 	article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 		display: block;
 	}

@@ -5,6 +5,9 @@ from google.appengine.ext.webapp import template
 from urllib import *
 from bs4 import BeautifulSoup
 from models import Job
+import Walkscore
+import os.path
+import webbrowser
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
@@ -94,6 +97,34 @@ class MainHandler(webapp2.RequestHandler):
       print("Bad search query. Please check your spelling")
 
     self.response.out.write(template.render('views/index.html', {'d_jobs': dice_list, 'i_jobs': indeed_list}))
+
+    def getWalkScore(location):
+    geocodeAddr = location.replace(" ", "+")
+    geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
+    geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
+    print(geocodeUrl)
+
+    response = urllib.request.urlopen(geocodeUrl) #gets http response object
+    string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+    json_obj = json.loads(string)
+    geocodeCoord = json_obj['results'][0]['geometry']['location']
+    geocodeLat = geocodeCoord['lat']
+    geocodeLon = geocodeCoord['lng']
+    print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
+
+    walkScoreAddress = location.replace(" ", "%20")
+    walkScoreAddress = walkScoreAddress.replace(",", "")
+    walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
+    walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
+    response = urllib.request.urlopen(walkScoreUrl)
+    string = response.read().decode('utf-8')
+    json_obj = json.loads(string)
+    walkScore = json_obj['walkscore']
+    print("Walk Score: %s" % walkScore)
+    # print(json.dumps(json_obj, indent=4, sort_keys=True))
+    print(walkScoreUrl)
+    return walkScore
+
 
 app = webapp2.WSGIApplication([
                             ('/', MainHandler),
