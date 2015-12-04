@@ -98,7 +98,7 @@ class MainHandler(webapp2.RequestHandler):
 
     self.response.out.write(template.render('views/index.html', {'d_jobs': dice_list, 'i_jobs': indeed_list}))
 
-    def getWalkScore(location):
+  def getWalkScore(location):
     geocodeAddr = location.replace(" ", "+")
     geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
     geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
