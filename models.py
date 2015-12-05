@@ -3,3 +3,4 @@ class Job:
   company = ""
   location = ""
   description = ""
+  href = ""

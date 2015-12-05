@@ -44,11 +44,12 @@ class MainHandler(webapp2.RequestHandler):
       companies = indeed_soup.findAll("span", {"class", "company"})
       loc = indeed_soup.find_all("span", {"class": "location"})
       desc = indeed_soup.find_all("span", {"class": "summary"})
+      jobURLS = indeed_soup.find_all("a", {"class": "jobtitle"})
 
       indeed_list = []
       print titles
 
-      for t, c ,l, d in zip(titles, companies, loc, desc):
+      for t, c ,l, d, h in zip(titles, companies, loc, desc, jobURLS):
         print t
         if t:
           i_job = Job()
@@ -56,6 +57,7 @@ class MainHandler(webapp2.RequestHandler):
           i_job.company = c.get_text().strip()
           i_job.location = l.get_text().strip()
           i_job.description = d.get_text().encode("utf8").strip()
+          i_job.href = h.get("href")
           indeed_list.append(i_job)
       
       # print "---------INDEED--------"
@@ -72,7 +74,7 @@ class MainHandler(webapp2.RequestHandler):
 
       dice_list = []
       locations = dice_soup.find_all("li", {"class": "location"})
-
+      # diceJobURLS = dice_soup.find_all("a", {"class": "dice-btn-link"})
       for job, loc in zip(dice_jobs, locations):
         d_job = Job()
         exists = job.find("a", {"class": "dice-btn-link"}).get("title")
@@ -83,6 +85,7 @@ class MainHandler(webapp2.RequestHandler):
           desc = job.find("div", {"class": "shortdesc"}).get_text().encode("utf8")
           d_job.description = str(desc).strip()
           d_job.location = loc.get_text()
+          d_job.href = job.find("a", {"class": "dice-btn-link"}).get('href')
           dice_list.append(d_job)
 
       # print "------ DICE -------"

@@ -40,7 +40,7 @@
         </section>
 
       <!-- Main -->
-      {% if i_jobs and d_jobs %}
+      {% if i_jobs or d_jobs %}
         <section id="main" class="container">
           <section class="box special">
             <header class="major">
@@ -52,7 +52,7 @@
                 </tr>
                 {% for i in i_jobs %}
                 <tr>
-                  <td>{{i.title}}</td>
+                  <td><a href="http://indeed.com{{i.href}}">{{i.title}}</a></td>
                   <td>{{i.company}}</td>
                   <td>{{i.location}}</td>
                   <td>{{i.description}}</td>
@@ -69,7 +69,7 @@
                 </tr>
                 {% for d in d_jobs %}
                 <tr>
-                <td>{{d.title}}</td>
+                <td><a href="{{d.href}}"> {{d.title}}</a></td>
                 <td>{{d.company}}</td>
                 <td>{{d.location}}</td>
                 <td>{{d.description}}</td>
