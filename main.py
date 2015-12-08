@@ -8,6 +8,7 @@ from models import Job
 import Walkscore
 import os.path
 import webbrowser
+from yelp_api import *
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
@@ -162,7 +163,7 @@ class MainHandler(webapp2.RequestHandler):
       results.append(location)
     return results
 
-    
+
 app = webapp2.WSGIApplication([
                             ('/', MainHandler),
   ], debug=True)
