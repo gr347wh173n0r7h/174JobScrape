@@ -163,6 +163,26 @@ class MainHandler(webapp2.RequestHandler):
       results.append(location)
     return results
 
+  def getGlassdoor(company):
+    company = company.replace(" ", "%20")
+    # company = company.strip()
+    glassPID = "49973"
+    glassKey = "g2TIGvm8cb9"
+    glassURL = "http://api.glassdoor.com/api/api.htm?v=1&format=json&t.p=%s&t.k=%s&action=employers&q=%s" % (glassPID, glassKey, company)
+    print glassURL
+    request = urllib.request.Request(glassURL, headers={'User-Agent': 'Mozilla/5.0'}) #The assembled request
+    response = urllib.request.urlopen(request)
+    string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+    json_obj = json.loads(string)
+
+    company_dict = json_obj["response"]["employers"]
+    if company_dict:
+        glassDoorDict = {}
+        glassDoorDict["name"] = company_dict[0]["name"]
+        glassDoorDict["overall_rating"] = company_dict[0]["overallRating"]
+        return glassDoorDict
+    return None
+
 
 app = webapp2.WSGIApplication([
                             ('/', MainHandler),
