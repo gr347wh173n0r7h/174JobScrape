@@ -44,7 +44,9 @@ class MainHandler(webapp2.RequestHandler):
       companies = indeed_soup.findAll("span", {"class", "company"})
       loc = indeed_soup.find_all("span", {"class": "location"})
       desc = indeed_soup.find_all("span", {"class": "summary"})
-      jobURLS = indeed_soup.find_all("a", {"class": "jobtitle"})
+      # jobURLS = indeed_soup.find_all("a", {"class": "jobtitle"})
+      jobURLS = indeed_soup.find_all("a", {"class": "turnstileLink"})
+
 
       indeed_list = []
       print titles
