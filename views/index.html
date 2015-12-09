@@ -12,6 +12,16 @@
     <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
     <link rel="stylesheet" href="assets/css/main.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/jquery.scrollgress.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="assets/js/main.js"></script>
+    <script type='text/javascript' charset='utf-8' src='assets/js/popbox.js'></script>
   </head>
   <body class="landing">
     <div id="page-wrapper">
@@ -56,6 +66,14 @@
                   <td>{{i.company}}</td>
                   <td>{{i.location}}</td>
                   <td>{{i.description}}</td>
+                  <td>WOK_SCORE</td>
+                  <td>
+                    <div class="iconDiv">
+                      <br>
+                      <img class="iconImg" src="images/apps_yelp.png">
+                      <img class="iconImg" src="images/gd.png">
+                    </div>
+                  </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -73,6 +91,7 @@
                 <td>{{d.company}}</td>
                 <td>{{d.location}}</td>
                 <td>{{d.description}}</td>
+                <td>WOK_SCORE</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -83,6 +102,7 @@
             </header>
             <!--<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>-->
           </section>
+        </section>
           {% endif %}
 
       <!-- Footer -->
@@ -101,15 +121,5 @@
         </footer>
 
     </div>
-
-    <!-- Scripts -->
-      <script src="assets/js/jquery.min.js"></script>
-      <script src="assets/js/jquery.dropotron.min.js"></script>
-      <script src="assets/js/jquery.scrollgress.min.js"></script>
-      <script src="assets/js/skel.min.js"></script>
-      <script src="assets/js/util.js"></script>
-      <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-      <script src="assets/js/main.js"></script>
-
   </body>
 </html>
