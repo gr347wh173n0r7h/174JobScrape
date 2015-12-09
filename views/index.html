@@ -21,7 +21,20 @@
     <script src="assets/js/util.js"></script>
     <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
     <script src="assets/js/main.js"></script>
+    <script type='text/javascript' charset='utf-8' src='jquery.js'></script>
     <script type='text/javascript' charset='utf-8' src='assets/js/popbox.js'></script>
+      <link rel='stylesheet' href='assets/css/popbox.css' type='text/css'>
+    <script type='text/javascript'>
+       $(document).ready(function(){
+         $('.popbox').popbox({
+           'open'          : '.POPopen',
+           'box'           : '.POPbox',
+           'arrow'         : '.POParrow',
+           'arrow_border'  : '.POParrow_border',
+           'close'         : '.POPclose'
+          });
+       });
+    </script>
   </head>
   <body class="landing">
     <div id="page-wrapper">
@@ -34,6 +47,7 @@
         <section id="banner">
           <h2>Job Scraper</h2>
           <p>Search Indeed.com and Dice.com at the same time!</p>
+
           <form action="/" method="POST" enctype="multipart/form-data">
             <ul class="actions">
               <li>
@@ -70,8 +84,30 @@
                   <td>
                     <div class="iconDiv">
                       <br>
-                      <img class="iconImg" src="images/apps_yelp.png">
-                      <img class="iconImg" src="images/gd.png">
+
+                      <div class='popbox'>
+                        <a class='POPopen' href='#'><img class="iconImg" src="images/apps_yelp.png"></a>
+                        <div class='collapse'>
+                          <div class='POPbox'>
+
+                             <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
+
+                            <a href="#" class="POPclose">close</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class='popbox'>
+                        <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png"></a>
+                        <div class='collapse'>
+                          <div class='POPbox'>
+
+                            <div class="POPContent"><h1>GlassDoor Content Goes Here</h1></div>
+
+                            <a href="#" class="POPclose">close</a>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </td>
                 </tr>

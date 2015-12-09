@@ -1,0 +1,58 @@
+table td{overflow: auto;}
+
+.popbox {
+  margin:0px auto;
+  text-align:center;
+  position:relative;
+}
+
+  .collapse { position:relative; }
+
+  .POPContent {
+     padding-top: 10px;
+  }
+
+  .POPopen {
+    z-index: 1000;
+  }
+
+    .POPbox {
+      display:block;
+      display:none;
+      background:#FFF;
+      border:solid 1px #BBBBBB;
+      border-radius:5px;
+      box-shadow:0px 0px 15px #999;
+      position:absolute;
+      z-index: 1002;
+    }
+
+      .POPbox a.POPclose {
+       color:red;
+       font-size:12px;
+       font-family:arial;
+       text-decoration:none;
+      }
+
+      .POParrow {
+      	width: 0;
+      	height: 0;
+      	border-left: 11px solid transparent;
+      	border-right: 11px solid transparent;
+      	border-bottom: 11px solid #FFF;
+      	position:absolute;
+      	left:1px;
+      	top:-10px;
+      	z-index:1001;
+      }
+
+      .POParrow-border {
+      	width: 0;
+      	height: 0;
+      	border-left: 11px solid transparent;
+      	border-right: 11px solid transparent;
+      	border-bottom: 11px solid #BBBBBB;
+      	position:absolute;
+      	top:-12px;
+      	z-index: 1000;
+      }

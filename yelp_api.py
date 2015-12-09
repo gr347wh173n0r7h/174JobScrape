@@ -21,7 +21,8 @@ import pprint
 import sys
 import urllib
 import urllib2
-import oauth2
+#import oauth2
+from google.appengine.api import oauth
 
 API_HOST = 'api.yelp.com'
 DEFAULT_TERM = 'dinner'
