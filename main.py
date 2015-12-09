@@ -8,10 +8,12 @@ from models import Job
 import Walkscore
 import os.path
 import webbrowser
+from yelp_api import *
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
     self.response.out.write(template.render('views/index.html', {}))
+
   def post(self):
     job = cgi.escape(self.request.get("job"))
     location = cgi.escape(self.request.get("location"))
@@ -129,6 +131,57 @@ class MainHandler(webapp2.RequestHandler):
     # print(json.dumps(json_obj, indent=4, sort_keys=True))
     print(walkScoreUrl)
     return walkScore
+
+
+  def getYelpLocations(location):
+    response = query_api('local flavor', location)
+    results = []
+    for business in response:
+      location = {}
+      if business['name']:
+        location['name'] = business['name']
+      if business['rating']:
+        location['rating'] = business['rating']
+      if business['url']:
+        location['url'] = business['url']
+      if business['image_url']:
+        location['image_url'] = business['image_url']
+      food_type = []
+      for a in business['categories']:
+        food_type.append(a[0])
+      location['categories'] = food_type
+      if business['location']['display_address']:
+        location_string =""
+        for a in business['location']['display_address']:
+          location_string +=a + " " 
+        location['location'] = location_string
+      if business['location']['coordinate']:
+        coordinates = ""
+        for a in business['location']['coordinate']:
+          coordinates += str(business['location']['coordinate'][a]) + " "
+        location["coordinates"] = coordinates
+      results.append(location)
+    return results
+
+  def getGlassdoor(company):
+    company = company.replace(" ", "%20")
+    # company = company.strip()
+    glassPID = "49973"
+    glassKey = "g2TIGvm8cb9"
+    glassURL = "http://api.glassdoor.com/api/api.htm?v=1&format=json&t.p=%s&t.k=%s&action=employers&q=%s" % (glassPID, glassKey, company)
+    print glassURL
+    request = urllib.request.Request(glassURL, headers={'User-Agent': 'Mozilla/5.0'}) #The assembled request
+    response = urllib.request.urlopen(request)
+    string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+    json_obj = json.loads(string)
+
+    company_dict = json_obj["response"]["employers"]
+    if company_dict:
+        glassDoorDict = {}
+        glassDoorDict["name"] = company_dict[0]["name"]
+        glassDoorDict["overall_rating"] = company_dict[0]["overallRating"]
+        return glassDoorDict
+    return None
 
 
 app = webapp2.WSGIApplication([
