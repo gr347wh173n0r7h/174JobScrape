@@ -9,9 +9,7 @@
     <title>Job Scraper</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
     <link rel="stylesheet" href="assets/css/main.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 
     <!-- Scripts -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -21,7 +19,6 @@
 
     <script src="assets/js/skel.min.js"></script>
     <script src="assets/js/util.js"></script>
-    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
     <script src="assets/js/main.js"></script>
     <script type='text/javascript' charset='utf-8' src='assets/js/popbox.js'></script>
     <link rel='stylesheet' href='assets/css/popbox.css' type='text/css'>
@@ -99,7 +96,7 @@
               <br>
               <table border="1">
                 <tr>
-                  <td><h3>INDEED JOBS</h3></td>
+                  <td colspan="5"><h3>INDEED JOBS</h3></td>
                 </tr>
                 {% for i in i_jobs %}
                 <tr>
@@ -107,35 +104,8 @@
                   <td>{{i.company}}</td>
                   <td>{{i.location}}</td>
                   <td>{{i.description}}</td>
-                  <td>WALK_SCORE</td>
                   <td>
-                    <div class="iconDiv">
-                      <br>
-
-                      <div class='popbox'>
-                        <a class='POPopen' href='#' value="{{i.location}}"><img class="iconImg" src="images/apps_yelp.png"></a>
-                        <div class='collapse'>
-                          <div class='POPbox' >
-
-                             <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
-
-                            <a href="#" class="POPclose">close</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class='popbox'>
-                        <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png" ></a>
-                        <div class='collapse'>
-                          <div class='POPbox'>
-
-                            <div class="POPContent"><h1>GlassDoor Content Goes Here</h1></div>
-
-                            <a href="#" class="POPclose">close</a>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
+                  <a href="/job/{{i.key.urlsafe}}" method="GET">Extras <img class="iconImg" src="images/apps_yelp.png"><img class="iconImg" src="images/gd.png"></a>
                   </td>
                 </tr>
                 {% empty %}
@@ -144,7 +114,7 @@
                 </tr>
                 {% endfor %}
                 <tr>
-                  <td>
+                  <td colspan="5">
                     <h2>DICE JOBS</h2>
                   </td>
                 </tr>
@@ -154,33 +124,8 @@
                 <td>{{d.company}}</td>
                 <td>{{d.location}}</td>
                 <td>{{d.description}}</td>
-                <td>WALK_SCORE</td>
                 <td>
-                  <a href="/job/{{d.key.urlsafe}}" method="GET">View more </a>
-                  <div class="iconDiv">
-                    <br>
-                    <div class='popbox'>
-                      <a class='POPopen' href='#'><img class="iconImg" src="images/apps_yelp.png"></a>
-                      <div class='collapse'>
-                        <div class='POPbox' >
-                           <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
-                          <a href="#" class="POPclose">close</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class='popbox'>
-                      <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png"></a>
-                      <div class='collapse'>
-                        <div class='POPbox'>
-
-                          <div class="POPContent"><h1>GlassDoor Content Goes Here</h1></div>
-
-                          <a href="#" class="POPclose">close</a>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+                  <a href="/job/{{d.key.urlsafe}}" method="GET">Extras <img class="iconImg" src="images/apps_yelp.png"><img class="iconImg" src="images/gd.png"></a>
                 </td>
                 </tr>
                 {% empty %}
@@ -190,21 +135,12 @@
                 {% endfor %}
               </table>
             </header>
-            <!--<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>-->
           </section>
         </section>
           {% endif %}
 
       <!-- Footer -->
         <footer id="footer">
-          <!--<ul class="icons">-->
-            <!--<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>-->
-            <!--<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>-->
-            <!--<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>-->
-            <!--<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>-->
-            <!--<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>-->
-            <!--<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>-->
-          <!--</ul>-->
           <ul class="copyright">
             <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
           </ul>

@@ -15,10 +15,15 @@ class MainHandler(webapp2.RequestHandler):
     self.response.out.write(template.render('views/index.html', {}))
 
   def post(self):
+    # Clear database of previous results
+    clear_database()
+
     job = cgi.escape(self.request.get("job"))
     location = cgi.escape(self.request.get("location"))
-    print job
-    print location
+    if len(location) < 1:
+      location = "San Jose, CA"
+    if len(job) < 1:
+      job = "Software Engineer"
 
     indeed_job = job.replace(" ", "+")
     indeed_loc = location.replace(" ", "+")
@@ -93,6 +98,7 @@ class MainHandler(webapp2.RequestHandler):
           d_job.location = loc.get_text()
           d_job.href = job.find("a", {"class": "dice-btn-link"}).get('href')
           d_job.site = "dice"
+          # Store to database
           d_job.put()
           dice_list.append(d_job)
 
@@ -106,6 +112,8 @@ class MainHandler(webapp2.RequestHandler):
 
     else:
       print("Bad search query. Please check your spelling")
+
+    # Query database for new jobs
     d_jobs = Job.query(Job.site == "dice").fetch()
     i_jobs = Job.query(Job.site == "indeed").fetch()
     self.response.out.write(template.render('views/index.html', {'d_jobs': d_jobs, 'i_jobs': i_jobs}))
@@ -170,8 +178,7 @@ def get_yelp(location):
         coordinates += str(business['location']['coordinate'][a]) + " "
       location["coordinates"] = coordinates
     results.append(location)
-    return results
-  print "FOUND RESULTS"
+  return results
 
   def getGlassdoor(company):
     company = company.replace(" ", "%20")
@@ -193,6 +200,10 @@ def get_yelp(location):
         return glassDoorDict
     return None
 
+def clear_database():
+  all_objects = Job.query().fetch()
+  for a in all_objects:
+    a.key.delete()
 
 app = webapp2.WSGIApplication([
                             ('/', MainHandler),
