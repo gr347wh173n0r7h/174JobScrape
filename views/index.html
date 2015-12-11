@@ -76,7 +76,7 @@
                 </tr>
                 {% for i in i_jobs %}
                 <tr>
-                  <td><a href="http://indeed.com{{i.href}}">{{i.title}}</a></td>
+                  <td><a href="http://indeed.com{{i.href}}" target="_blank">{{i.title}}</a></td>
                   <td>{{i.company}}</td>
                   <td>{{i.location}}</td>
                   <td>{{i.description}}</td>
@@ -123,11 +123,40 @@
                 </tr>
                 {% for d in d_jobs %}
                 <tr>
-                <td><a href="{{d.href}}"> {{d.title}}</a></td>
+                <td><a href="{{d.href}}" target="_blank"> {{d.title}}</a></td>
                 <td>{{d.company}}</td>
                 <td>{{d.location}}</td>
                 <td>{{d.description}}</td>
                 <td>WALK_SCORE</td>
+                <td>
+                  <div class="iconDiv">
+                    <br>
+
+                    <div class='popbox'>
+                      <a class='POPopen' href='#'><img class="iconImg" src="images/apps_yelp.png"></a>
+                      <div class='collapse'>
+                        <div class='POPbox'>
+
+                           <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
+
+                          <a href="#" class="POPclose">close</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='popbox'>
+                      <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png"></a>
+                      <div class='collapse'>
+                        <div class='POPbox'>
+
+                          <div class="POPContent"><h1>GlassDoor Content Goes Here</h1></div>
+
+                          <a href="#" class="POPclose">close</a>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </td>
                 </tr>
                 {% empty %}
                 <tr>

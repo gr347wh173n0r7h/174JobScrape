@@ -5,6 +5,13 @@ table td{overflow: auto;}
   text-align:center;
   position:relative;
 }
+  td {
+    z-index: 999;
+    overflow: none;
+  }
+  table td {
+    overflow: visible;
+  }
 
   .collapse { position:relative; }
 
@@ -13,7 +20,7 @@ table td{overflow: auto;}
   }
 
   .POPopen {
-    z-index: 1000;
+    z-index: 1003;
   }
 
     .POPbox {
