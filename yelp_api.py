@@ -21,7 +21,7 @@ import pprint
 import sys
 import urllib
 import urllib2
-#import oauth2
+import oauth2
 from google.appengine.api import oauth
 
 API_HOST = 'api.yelp.com'
@@ -70,6 +70,7 @@ def request(host, path, url_params=None):
     token = oauth2.Token(TOKEN, TOKEN_SECRET)
     oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), consumer, token)
     signed_url = oauth_request.to_url()
+
     # print u'Querying {0} ...'.format(url)
 
     conn = urllib2.urlopen(signed_url, None)
@@ -93,7 +94,7 @@ def search(term, location):
     """
     url_params = {
         'term': term.replace(' ', '+'),
-        'location': location.replace(' ', '+'),
+        'location': location.replace(' ', ','),
         'limit': SEARCH_LIMIT
     }
     return request(API_HOST, SEARCH_PATH, url_params=url_params)

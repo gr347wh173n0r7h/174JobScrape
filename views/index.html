@@ -14,26 +14,53 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 
     <!-- Scripts -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.dropotron.min.js"></script>
     <script src="assets/js/jquery.scrollgress.min.js"></script>
+
     <script src="assets/js/skel.min.js"></script>
     <script src="assets/js/util.js"></script>
     <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
     <script src="assets/js/main.js"></script>
-    <script type='text/javascript' charset='utf-8' src='jquery.js'></script>
     <script type='text/javascript' charset='utf-8' src='assets/js/popbox.js'></script>
-      <link rel='stylesheet' href='assets/css/popbox.css' type='text/css'>
+    <link rel='stylesheet' href='assets/css/popbox.css' type='text/css'>
+  
+
     <script type='text/javascript'>
-       $(document).ready(function(){
-         $('.popbox').popbox({
+      $(document).ready(function(){
+        $('.popbox').popbox({
            'open'          : '.POPopen',
            'box'           : '.POPbox',
            'arrow'         : '.POParrow',
            'arrow_border'  : '.POParrow_border',
            'close'         : '.POPclose'
           });
-       });
+        $(".POPopen").click(function() {
+          var location = $(this).val();
+          alert(location);
+          console.log(location.toString());
+          // getYelp(location.toString());
+        });
+      });
+      function getYelp(location){
+        var geo = new google.maps.Geocoder();
+        geo.geocode({ 'address' : location}, function(results, status){
+          if(status == google.maps.GeocoderStatus.OK) {
+            var lat = results[0].geometry.location.lat();
+            var lon = results[0].geometry.location.lng();
+            console.log(lat, lon);
+            $.ajax({
+              type: "GET",
+              url: "/yelp",
+              data: {'lat': lat.toString(), 'lon':lon.toString()},
+              success: function(results){
+                $('#location_list').append(results);
+              }
+            });
+          }
+        });
+      }
     </script>
   </head>
   <body class="landing">
@@ -86,9 +113,9 @@
                       <br>
 
                       <div class='popbox'>
-                        <a class='POPopen' href='#'><img class="iconImg" src="images/apps_yelp.png"></a>
+                        <a class='POPopen' href='#' value="{{i.location}}"><img class="iconImg" src="images/apps_yelp.png"></a>
                         <div class='collapse'>
-                          <div class='POPbox'>
+                          <div class='POPbox' >
 
                              <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
 
@@ -97,7 +124,7 @@
                         </div>
                       </div>
                       <div class='popbox'>
-                        <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png"></a>
+                        <a class='POPopen' href='#'><img class="iconImg" src="images/gd.png" ></a>
                         <div class='collapse'>
                           <div class='POPbox'>
 
@@ -129,16 +156,14 @@
                 <td>{{d.description}}</td>
                 <td>WALK_SCORE</td>
                 <td>
+                  <a href="/job/{{d.key.urlsafe}}" method="GET">View more </a>
                   <div class="iconDiv">
                     <br>
-
                     <div class='popbox'>
                       <a class='POPopen' href='#'><img class="iconImg" src="images/apps_yelp.png"></a>
                       <div class='collapse'>
-                        <div class='POPbox'>
-
+                        <div class='POPbox' >
                            <div class="POPContent"><h1>Yelp Content Goes Here</h1></div>
-
                           <a href="#" class="POPclose">close</a>
                         </div>
                       </div>

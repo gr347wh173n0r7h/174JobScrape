@@ -62,6 +62,8 @@ class MainHandler(webapp2.RequestHandler):
           i_job.location = l.get_text().strip()
           i_job.description = d.get_text().encode("utf8").strip()
           i_job.href = h.get("href")
+          i_job.site = "indeed"
+          i_job.put()
           indeed_list.append(i_job)
       
       # print "---------INDEED--------"
@@ -90,6 +92,8 @@ class MainHandler(webapp2.RequestHandler):
           d_job.description = str(desc).strip()
           d_job.location = loc.get_text()
           d_job.href = job.find("a", {"class": "dice-btn-link"}).get('href')
+          d_job.site = "dice"
+          d_job.put()
           dice_list.append(d_job)
 
       # print "------ DICE -------"
@@ -102,66 +106,72 @@ class MainHandler(webapp2.RequestHandler):
 
     else:
       print("Bad search query. Please check your spelling")
-
-    self.response.out.write(template.render('views/index.html', {'d_jobs': dice_list, 'i_jobs': indeed_list}))
-
-  def getWalkScore(location):
-    geocodeAddr = location.replace(" ", "+")
-    geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
-    geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
-    print(geocodeUrl)
-
-    response = urllib.request.urlopen(geocodeUrl) #gets http response object
-    string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
-    json_obj = json.loads(string)
-    geocodeCoord = json_obj['results'][0]['geometry']['location']
-    geocodeLat = geocodeCoord['lat']
-    geocodeLon = geocodeCoord['lng']
-    print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
-
-    walkScoreAddress = location.replace(" ", "%20")
-    walkScoreAddress = walkScoreAddress.replace(",", "")
-    walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
-    walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
-    response = urllib.request.urlopen(walkScoreUrl)
-    string = response.read().decode('utf-8')
-    json_obj = json.loads(string)
-    walkScore = json_obj['walkscore']
-    print("Walk Score: %s" % walkScore)
-    # print(json.dumps(json_obj, indent=4, sort_keys=True))
-    print(walkScoreUrl)
-    return walkScore
+    d_jobs = Job.query(Job.site == "dice").fetch()
+    i_jobs = Job.query(Job.site == "indeed").fetch()
+    self.response.out.write(template.render('views/index.html', {'d_jobs': d_jobs, 'i_jobs': i_jobs}))
 
 
-  def getYelpLocations(location):
-    response = query_api('local flavor', location)
-    results = []
-    for business in response:
-      location = {}
-      if business['name']:
-        location['name'] = business['name']
-      if business['rating']:
-        location['rating'] = business['rating']
-      if business['url']:
-        location['url'] = business['url']
-      if business['image_url']:
-        location['image_url'] = business['image_url']
-      food_type = []
-      for a in business['categories']:
-        food_type.append(a[0])
-      location['categories'] = food_type
-      if business['location']['display_address']:
-        location_string =""
-        for a in business['location']['display_address']:
-          location_string +=a + " " 
-        location['location'] = location_string
-      if business['location']['coordinate']:
-        coordinates = ""
-        for a in business['location']['coordinate']:
-          coordinates += str(business['location']['coordinate'][a]) + " "
-        location["coordinates"] = coordinates
-      results.append(location)
+def getWalkScore(location):
+  geocodeAddr = location.replace(" ", "+")
+  geocodeAPIKey = 'AIzaSyCWjiF1IVs-eYNkWjU5PEFesKYAC0HSQJo'
+  geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s' % (geocodeAddr, geocodeAPIKey)
+  response = urllib.request.urlopen(geocodeUrl) #gets http response object
+  string = response.read().decode('utf-8') #converts http response object from 'bytes' to string
+  json_obj = json.loads(string)
+  geocodeCoord = json_obj['results'][0]['geometry']['location']
+  geocodeLat = geocodeCoord['lat']
+  geocodeLon = geocodeCoord['lng']
+  print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
+
+  walkScoreAddress = location.replace(" ", "%20")
+  walkScoreAddress = walkScoreAddress.replace(",", "")
+  walkScoreAPIKey = 'e4b2cbd6c86ddbee53852c89a62f1184'
+  walkScoreUrl = 'http://api.walkscore.com/score?format=json&address=%s&lat=%s&lon=%s&wsapikey=%s' % (walkScoreAddress, geocodeLat, geocodeLon, walkScoreAPIKey)
+  response = urllib.request.urlopen(walkScoreUrl)
+  string = response.read().decode('utf-8')
+  json_obj = json.loads(string)
+  walkScore = json_obj['walkscore']
+  print("Walk Score: %s" % walkScore)
+  # print(json.dumps(json_obj, indent=4, sort_keys=True))
+  print(walkScoreUrl)
+  return walkScore
+
+class JobViewHandler(webapp2.RequestHandler):
+  def get(self, job_id):
+    job = ndb.Key(urlsafe=job_id).get()
+    yelp = get_yelp(job.location)
+    self.response.out.write(template.render('views/job.html', {'job': job, 'yelp': yelp}))
+
+def get_yelp(location):
+  response = query_api('local flavor', location)
+  results = []
+  for business in response:
+    location = {}
+    if 'name' in business:
+      location['name'] = business['name']
+    if 'rating' in business:
+      location['rating'] = business['rating']
+    if 'url' in business:
+      location['url'] = business['url']
+    if 'image_url' in business:
+      location['image_url'] = business['image_url']
+    food_type = []
+    for a in business['categories']:
+      food_type.append(a[0])
+    location['categories'] = food_type
+    if business['location']['display_address']:
+      location_string =""
+      for a in business['location']['display_address']:
+        location_string +=a + " " 
+      location['location'] = location_string
+    if business['location']['coordinate']:
+      coordinates = ""
+      for a in business['location']['coordinate']:
+        coordinates += str(business['location']['coordinate'][a]) + " "
+      location["coordinates"] = coordinates
+    results.append(location)
     return results
+  print "FOUND RESULTS"
 
   def getGlassdoor(company):
     company = company.replace(" ", "%20")
@@ -186,4 +196,5 @@ class MainHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
                             ('/', MainHandler),
+                            ('/job/(.+)', JobViewHandler),
   ], debug=True)
