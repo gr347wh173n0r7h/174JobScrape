@@ -8,6 +8,7 @@ from models import Job
 import os.path
 import webbrowser
 from yelp_api import *
+import logging
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -177,7 +178,9 @@ def getGlassdoor(company):
     # had to do the next line just to get it to work
 
     request = urllib2.Request(glassURL, headers={'User-Agent': 'Mozilla/5.0'})  # The assembled request
+
     response = urllib2.urlopen(request)
+    logging.info(response)
     string = response.read().decode('utf-8')  # converts http response object from 'bytes' to string
     json_obj = json.loads(string)
 
@@ -216,7 +219,7 @@ def getGlassdoor(company):
                 glassDoorDict["ceoNumRatings"] = company_dict[0]["ceo"]["numberOfRatings"]
             if "pctApprove" in company_dict[0]["ceo"]:
              glassDoorDict["ceoApprovalRating"] = company_dict[0]["ceo"]["pctApprove"]
-            if "src" in company_dict[0]["ceo"]["image"]:
+            if "image" in company_dict[0]["ceo"].keys():
                 glassDoorDict["ceoPicture"] = company_dict[0]["ceo"]["image"]["src"]
 
         glassDoorDictList.append(glassDoorDict)
