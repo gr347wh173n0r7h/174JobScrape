@@ -52,6 +52,50 @@
             <header class="major">
               <h2>{{job.title}} @ {{job.company}}</h2>
               <br>
+                <table border="1">
+                <tr>
+                  <td colspan="3"><h3>Company Information <a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a> </h3></td>
+                </tr>
+                {% for g in glassdoor %}
+                    <tr>
+                  <td>
+                      <a href="http://{{g.website}}" target="_blank"> <img src="{{g.squareLogo}}"  /> </a>
+                  </td>
+                        <td>{{job.company}} is primarily a(n) {{g.sectorName}} company. The CEO is {{g.ceoName}}. His approval rating is {{g.ceoApprovalRating}} percent.</td>
+                         <td><img src="{{g.ceoPicture}}"</td>
+                </tr>
+                <tr>
+                    <td>Featured pro by a(n) {{g.featuredJobTitle}} at {{job.company}}</td>
+                    <td colspan="2">This person's pros are {{g.featuredPro}}</td>
+                </tr>
+               <tr>
+                   <td>Featured con by a(n) {{g.featuredJobTitle}} at {{job.company}}</td>
+                   <td colspan="2">This person's cons are {{g.featuredCons}}</td>
+               </tr>
+                <tr>
+                    <td colspan="3">Employees at this company would rate the culture {{g.culture}} out of 5.</td>
+                </tr>
+                    <tr>
+                        <td colspan="3">Employees at this company would rate the senior leadership {{g.seniorLeadership}} out of 5.</td>
+                    </tr>
+                     <tr>
+                        <td colspan="3">Employees at this company would rate the compensation and benefits {{g.compensation}} out of 5.</td>
+                    </tr>
+                     <tr>
+                        <td colspan="3">Employees at this company would rate the career opportunities {{g.careerOpportunities}} out of 5.</td>
+                    </tr>
+              </table>
+                <br>
+
+                <br>
+                {% endfor %}
+                <table border="1">
+                <tr>
+                    {% for w in walkScore %}
+                  <td colspan="3"><h3><a href="{{w.link}}" target="_blank"> <img src="{{w.logoURL}}"  /> </a> {{w.walkScore}}<br> {{w.desc}}</h3></td>
+                </tr>
+                    {% endfor %}
+              </table>
               <table border="1">
                 <tr>
                   <td colspan="3"><h3>Yelp's Local Favorites</h3></td>
