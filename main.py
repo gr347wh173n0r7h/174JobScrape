@@ -209,14 +209,15 @@ def getGlassdoor(company):
             glassDoorDict["featuredCons"] = company_dict[0]["featuredReview"]["cons"]
         if "overall" in company_dict[0]["featuredReview"]:
             glassDoorDict["featuredRating"] = company_dict[0]["featuredReview"]["overall"]
-        if "name" in company_dict[0]["ceo"]:
-            glassDoorDict["ceoName"] = company_dict[0]["ceo"]["name"]
-        if "numberOfRatings" in company_dict[0]["ceo"]:
-            glassDoorDict["ceoNumRatings"] = company_dict[0]["ceo"]["numberOfRatings"]
-        if "pctApprove" in company_dict[0]["ceo"]:
-            glassDoorDict["ceoApprovalRating"] = company_dict[0]["ceo"]["pctApprove"]
-        if "src" in company_dict[0]["ceo"]["image"]:
-            glassDoorDict["ceoPicture"] = company_dict[0]["ceo"]["image"]["src"]
+        if "ceo" in company_dict[0]:
+            if "name" in company_dict[0]["ceo"]:
+                glassDoorDict["ceoName"] = company_dict[0]["ceo"]["name"]
+            if "numberOfRatings" in company_dict[0]["ceo"]:
+                glassDoorDict["ceoNumRatings"] = company_dict[0]["ceo"]["numberOfRatings"]
+            if "pctApprove" in company_dict[0]["ceo"]:
+             glassDoorDict["ceoApprovalRating"] = company_dict[0]["ceo"]["pctApprove"]
+            if "src" in company_dict[0]["ceo"]["image"]:
+                glassDoorDict["ceoPicture"] = company_dict[0]["ceo"]["image"]["src"]
 
         glassDoorDictList.append(glassDoorDict)
         return glassDoorDictList
