@@ -1,8 +1,15 @@
 <!DOCTYPE HTML>
 <!--
-  Alpha by HTML5 UP
+  Alpha by HTML5 UP template
   html5up.net | @n33co
   Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+  Modified for use with Job Parser - CS174
+  CS174 Final Project
+  Job Scraper
+  Team #2 - Sajay Shah, Jordan Petersen, Jordan Melberg, Arjun Nayak
+  Donovon Bacon, Jeffery Tran
+  Parses Indeed and Dice to find a job
+  Uses Yelp, Walkscore, and Glassdoor to gather more information on the location where the job is located and the job itself
 -->
 <html>
   <head>
@@ -22,7 +29,7 @@
     <script src="assets/js/main.js"></script>
     <script type='text/javascript' charset='utf-8' src='assets/js/popbox.js'></script>
     <link rel='stylesheet' href='assets/css/popbox.css' type='text/css'>
-  
+
 
     <script type='text/javascript'>
       $(document).ready(function(){
@@ -40,6 +47,7 @@
           // getYelp(location.toString());
         });
       });
+      //
       function getYelp(location){
         var geo = new google.maps.Geocoder();
         geo.geocode({ 'address' : location}, function(results, status){
@@ -142,7 +150,7 @@
       <!-- Footer -->
         <footer id="footer">
           <ul class="copyright">
-            <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            <li>&copy; Job Parser. Team #2</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
           </ul>
         </footer>
 
