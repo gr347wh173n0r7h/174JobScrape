@@ -5,7 +5,6 @@ from google.appengine.ext.webapp import template
 from urllib2 import *
 from bs4 import BeautifulSoup
 from models import Job
-import Walkscore
 import os.path
 import webbrowser
 from yelp_api import *
@@ -21,6 +20,7 @@ class MainHandler(webapp2.RequestHandler):
 
         job = cgi.escape(self.request.get("job"))
         location = cgi.escape(self.request.get("location"))
+        
         if len(location) < 1:
             location = "San Jose, CA"
         if len(job) < 1:
@@ -55,9 +55,6 @@ class MainHandler(webapp2.RequestHandler):
             # jobURLS = indeed_soup.find_all("a", {"class": "jobtitle"})
             jobURLS = indeed_soup.find_all("a", {"class": "turnstileLink"})
 
-            indeed_list = []
-            print titles
-
             for t, c, l, d, h in zip(titles, companies, loc, desc, jobURLS):
                 print t
                 if t:
@@ -69,21 +66,11 @@ class MainHandler(webapp2.RequestHandler):
                     i_job.href = h.get("href")
                     i_job.site = "indeed"
                     i_job.put()
-                    indeed_list.append(i_job)
-
-            # print "---------INDEED--------"
-            # for i in indeed_list:
-            #   print "Title: " , i.title
-            #   print "Company: " , i.company
-            #   print "Description: " , i.description
-            #   print "Location: ", i.location
-            #   print "\n"
 
             # DICE -------------------------------------------------------------------
 
             dice_jobs = dice_soup.findAll('div', {'class': 'serp-result-content'})
 
-            dice_list = []
             locations = dice_soup.find_all("li", {"class": "location"})
             # diceJobURLS = dice_soup.find_all("a", {"class": "dice-btn-link"})
             for job, loc in zip(dice_jobs, locations):
@@ -100,15 +87,6 @@ class MainHandler(webapp2.RequestHandler):
                     d_job.site = "dice"
                     # Store to database
                     d_job.put()
-                    dice_list.append(d_job)
-
-                    # print "------ DICE -------"
-                    # for d in dice_list:
-                    #   print "Title: " , d.title
-                    #   print "Company: " , d.company
-                    #   print "Description: " , d.description
-                    #   print "Location: ", d.location
-                    #   print "\n"
 
         else:
             print("Bad search query. Please check your spelling")
@@ -129,7 +107,6 @@ def getWalkScore(location):
     geocodeCoord = json_obj['results'][0]['geometry']['location']
     geocodeLat = geocodeCoord['lat']
     geocodeLon = geocodeCoord['lng']
-    print("Lat: %s Lon: %s" % (geocodeLat, geocodeLon))
 
     walkScoreAddress = location.replace(" ", "%20")
     walkScoreAddress = walkScoreAddress.replace(",", "")
@@ -146,8 +123,6 @@ def getWalkScore(location):
         walkScoreDict["link"] = json_obj['ws_link']
         walkScoreDict["logoURL"] = json_obj['logo_url']
         walkScoreDict["desc"] = json_obj['description']
-    # print(json.dumps(json_obj, indent=4, sort_keys=Truhttp://api.walkscore.com/score?format=json&address=Santa%20Clara%20Valley%20CA&lat=37.2488478&lon=-121.8399593&wsapikey=e4b2cbd6c86ddbee53852c89a62f1184e))
-    print(walkScoreUrl)
     walkScoreInfo.append(walkScoreDict)
     return walkScoreInfo
 
@@ -162,6 +137,7 @@ class JobViewHandler(webapp2.RequestHandler):
 
 
 def get_yelp(location):
+    ''' Querys for top 5 results using YELP api. ''' 
     response = query_api('local flavor', location)
     results = []
     for business in response:
@@ -194,12 +170,10 @@ def get_yelp(location):
 
 def getGlassdoor(company):
     company = company.replace(" ", "%20")
-    # company = company.strip()
     glassPID = "49973"
     glassKey = "g2TIGvm8cb9"
     glassURL = "http://api.glassdoor.com/api/api.htm?v=1&format=json&t.p=%s&t.k=%s&action=employers&q=%s" % (
     glassPID, glassKey, company)
-    print glassURL
     # had to do the next line just to get it to work
 
     request = urllib2.Request(glassURL, headers={'User-Agent': 'Mozilla/5.0'})  # The assembled request
@@ -211,22 +185,38 @@ def getGlassdoor(company):
     if company_dict:
         glassDoorDictList = []
         glassDoorDict = {}
-        glassDoorDict["overallRating"] = company_dict[0]["overallRating"]
-        glassDoorDict["squareLogo"] = company_dict[0]["squareLogo"]
-        glassDoorDict["website"] = company_dict[0]["website"]
-        glassDoorDict["culture"] = company_dict[0]["cultureAndValuesRating"]
-        glassDoorDict["seniorLeadership"] = company_dict[0]["seniorLeadershipRating"]
-        glassDoorDict["compensation"] = company_dict[0]["compensationAndBenefitsRating"]
-        glassDoorDict["careerOpportunities"] = company_dict[0]["careerOpportunitiesRating"]
-        glassDoorDict["sectorName"] = company_dict[0]["sectorName"]
-        glassDoorDict["featuredPro"] = company_dict[0]["featuredReview"]["pros"]
-        glassDoorDict["featuredJobTitle"] = company_dict[0]["featuredReview"]["jobTitle"]
-        glassDoorDict["featuredCons"] = company_dict[0]["featuredReview"]["cons"]
-        glassDoorDict["featuredRating"] = company_dict[0]["featuredReview"]["overall"]
-        glassDoorDict["ceoName"] = company_dict[0]["ceo"]["name"]
-        glassDoorDict["ceoNumRatings"] = company_dict[0]["ceo"]["numberOfRatings"]
-        glassDoorDict["ceoApprovalRating"] = company_dict[0]["ceo"]["pctApprove"]
-        glassDoorDict["ceoPicture"] = company_dict[0]["ceo"]["image"]["src"]
+        if "overallRating" in company_dict[0]:
+            glassDoorDict["overallRating"] = company_dict[0]["overallRating"]
+        if "squareLogo" in company_dict[0]:
+            glassDoorDict["squareLogo"] = company_dict[0]["squareLogo"]
+        if "website" in company_dict[0]:
+            glassDoorDict["website"] = company_dict[0]["website"]
+        if "cultureAndValuesRating" in company_dict[0]:
+            glassDoorDict["culture"] = company_dict[0]["cultureAndValuesRating"]
+        if "seniorLeadershipRating" in company_dict[0]:
+            glassDoorDict["seniorLeadership"] = company_dict[0]["seniorLeadershipRating"]
+        if "compensationAndBenefitsRating" in company_dict[0]:
+            glassDoorDict["compensation"] = company_dict[0]["compensationAndBenefitsRating"]
+        if "careerOpportunitiesRating" in company_dict[0]:
+            glassDoorDict["careerOpportunities"] = company_dict[0]["careerOpportunitiesRating"]
+        if "sectorName" in company_dict[0]:
+            glassDoorDict["sectorName"] = company_dict[0]["sectorName"]
+        if "pros" in company_dict[0]["featuredReview"]:
+            glassDoorDict["featuredPro"] = company_dict[0]["featuredReview"]["pros"]
+        if "jobTitle" in company_dict[0]["featuredReview"]:
+            glassDoorDict["featuredJobTitle"] = company_dict[0]["featuredReview"]["jobTitle"]
+        if "cons" in company_dict[0]["featuredReview"]:
+            glassDoorDict["featuredCons"] = company_dict[0]["featuredReview"]["cons"]
+        if "overall" in company_dict[0]["featuredReview"]:
+            glassDoorDict["featuredRating"] = company_dict[0]["featuredReview"]["overall"]
+        if "name" in company_dict[0]["ceo"]:
+            glassDoorDict["ceoName"] = company_dict[0]["ceo"]["name"]
+        if "numberOfRatings" in company_dict[0]["ceo"]:
+            glassDoorDict["ceoNumRatings"] = company_dict[0]["ceo"]["numberOfRatings"]
+        if "pctApprove" in company_dict[0]["ceo"]:
+            glassDoorDict["ceoApprovalRating"] = company_dict[0]["ceo"]["pctApprove"]
+        if "src" in company_dict[0]["ceo"]["image"]:
+            glassDoorDict["ceoPicture"] = company_dict[0]["ceo"]["image"]["src"]
 
         glassDoorDictList.append(glassDoorDict)
         return glassDoorDictList
@@ -234,6 +224,7 @@ def getGlassdoor(company):
 
 
 def clear_database():
+    ''' Clears the temporary database upon new search" '''
     all_objects = Job.query().fetch()
     for a in all_objects:
         a.key.delete()
